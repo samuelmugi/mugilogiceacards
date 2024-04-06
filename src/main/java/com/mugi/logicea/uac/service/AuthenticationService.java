@@ -6,16 +6,14 @@ import com.mugi.logicea.repository.UserRepository;
 import com.mugi.logicea.security.JwtService;
 import com.mugi.logicea.uac.dtos.*;
 import com.mugi.logicea.uac.mapper.UACMapper;
-import com.mugi.logicea.utils.ErrorMessage;
-import com.mugi.logicea.utils.RestResponse;
-import com.mugi.logicea.utils.RestResponseObject;
-import com.mugi.logicea.utils.SearchDto;
+import com.mugi.logicea.utils.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,6 +35,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final GenericSpecifications<User> userSpecification = new GenericSpecifications<>();
 
 
     @EventListener(ApplicationReadyEvent.class)
@@ -52,7 +51,7 @@ public class AuthenticationService {
                 .role(String.valueOf(Role.USER))
                 .build();
         createUser(normalUser);
-        log.info("Logicea Normal user  created with email:{} and  password:{}",normalUser.getEmail(),normalUser.getPassword());
+        log.info("Logicea Normal user  created with email:{} and  password:{}", normalUser.getEmail(), normalUser.getPassword());
         SignUpRequest adminUser = SignUpRequest.builder()
                 .email("admin@logicea.mugi")
                 .firstName("admin")
@@ -62,7 +61,7 @@ public class AuthenticationService {
                 .role(String.valueOf(Role.ADMIN))
                 .build();
         createUser(adminUser);
-        log.info("Logicea Admin user created with email:{} and password:{}",adminUser.getEmail(),adminUser.getPassword());
+        log.info("Logicea Admin user created with email:{} and password:{}", adminUser.getEmail(), adminUser.getPassword());
 
         log.info("Init App users:{}", Instant.now());
         watch.stop();
@@ -125,7 +124,7 @@ public class AuthenticationService {
                     RestResponseObject.builder().message("Invalid Fields!!").errors(validateObj).build(),
                     HttpStatus.BAD_REQUEST);
         }
-        Optional<User> existingUser = userRepository.findById(request.getUserId());
+        Optional<User> existingUser = userRepository.findById(Long.valueOf(request.getUserId()));
         if (existingUser.isEmpty())
             return new RestResponse(
                     RestResponseObject.builder()
@@ -166,18 +165,19 @@ public class AuthenticationService {
     private List<ErrorMessage> validateUserDetails(SignUpRequest request) {
         List<ErrorMessage> errorMessageList = new ArrayList<>();
 
-        var reqRole= request.getRole();
-        if(!List.of(Role.ADMIN.name(), Role.USER.name()).contains(reqRole)){
-            log.error("Invalid role :{} supplied!",reqRole);
+        var reqRole = request.getRole();
+        if (!List.of(Role.ADMIN.name(), Role.USER.name()).contains(reqRole)) {
+            log.error("Invalid role :{} supplied!", reqRole);
             errorMessageList.add(
-                    ErrorMessage.builder().field("role").message("Invalid role :"+reqRole+" supplied!").build());
+                    ErrorMessage.builder().field("role").message("Invalid role :" + reqRole + " supplied!").build());
         }
 
         Optional<User> existingEmail = userRepository.findByEmail(request.getEmail());
-        if (existingEmail.isPresent()){
-            log.error("Duplicate email:{} found!",request.getEmail());
+        if (existingEmail.isPresent()) {
+            log.error("Duplicate email:{} found!", request.getEmail());
             errorMessageList.add(
-                    ErrorMessage.builder().field("email").message("Duplicate email found!").build());}
+                    ErrorMessage.builder().field("email").message("Duplicate email found!").build());
+        }
 
         return errorMessageList;
     }
@@ -202,13 +202,13 @@ public class AuthenticationService {
                     HttpStatus.BAD_REQUEST);
         }
         try {
-//      List<User> configs =
-//              userCustomAppRepository.findByFieldAndValue(
-//              User.class, searchDto.getFieldName(), searchDto.getValue());
-//      List<UserResponse> response = BusinessMapper.INSTANCE.userEntotyToUserResponseList(configs);
+            Specification<User> userSpec = userSpecification.findByFieldAndValue(searchDto);
+            List<User> users = userRepository.findAll(userSpec);
+
+            List<UserResponse> response = UACMapper.INSTANCE.userEntotyToUserResponseList(users);
             return new RestResponse(
                     RestResponseObject.builder().message("Fetched Successfully")
-//                  .payload(response)
+                            .payload(response)
                             .build(),
                     HttpStatus.OK);
         } catch (Exception e) {
@@ -286,7 +286,6 @@ public class AuthenticationService {
         return new RestResponse(
                 RestResponseObject.builder().message("Changed Status Successfully").build(), HttpStatus.OK);
     }
-
 
 
 }

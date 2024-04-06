@@ -15,11 +15,9 @@ public class UserResponse {
     private String id;
     private String firstName;
     private String lastName;
-     private String email;
-     private Role role;
+    private String email;
+    private Role role;
     private Date createDate;
     private String createBy;
-    private Date modifiedDate;
-    private String modifiedBy;
     private boolean active;
- }
+}
