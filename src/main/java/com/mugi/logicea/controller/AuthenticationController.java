@@ -1,15 +1,19 @@
-package com.mugi.logicea.uac.controller;
+package com.mugi.logicea.controller;
 
 
+import com.mugi.logicea.entiy.User;
 import com.mugi.logicea.uac.dtos.*;
 import com.mugi.logicea.uac.service.AuthenticationService;
-import com.mugi.logicea.utils.RestResponse;
+import com.mugi.logicea.utils.RestResponseObject;
 import com.mugi.logicea.utils.SearchDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/v1/uac")
@@ -19,10 +23,10 @@ public class AuthenticationController {
   private final AuthenticationService authenticationService;
 
   @PostMapping("/createUser")
-  public RestResponse createUser(@RequestBody SignUpRequest request) {
+  public ResponseEntity<RestResponseObject> createUser(@RequestBody SignUpRequest request) {
     return authenticationService.createUser(request);
   }  @PostMapping("/updateUser")
-  public RestResponse updateUser(@RequestBody SignUpUpdateRequest request) {
+  public ResponseEntity<RestResponseObject> updateUser(@RequestBody SignUpUpdateRequest request) {
     return authenticationService.updateUser(request);
   }
 
@@ -33,12 +37,12 @@ public class AuthenticationController {
   }
 
   @PostMapping("/changePassword")
-  public RestResponse changePassowrd(@Valid @RequestBody ChangePasswordRequest request) {
+  public ResponseEntity<RestResponseObject> changePassowrd(@Valid @RequestBody ChangePasswordRequest request) {
     return authenticationService.changePassowrd(request);
   }
 
   @PostMapping("/changeStatus")
-  public RestResponse changeUserStatus(
+  public ResponseEntity<RestResponseObject> changeUserStatus(
       @Valid @RequestBody ChangeStatusRequest changeStatusRequest) {
     return authenticationService.changeUserStatus(changeStatusRequest);
   }
@@ -46,12 +50,12 @@ public class AuthenticationController {
 
 
   @GetMapping(path = "/search", produces = "application/json")
-  RestResponse fetchUser(SearchDto searchDto) {
+  ResponseEntity<List<User>> fetchUser(SearchDto searchDto) {
     return authenticationService.fetchUser(searchDto);
   }
 
   @GetMapping(path = "/list", produces = "application/json")
-  RestResponse fetchPaginatedUserList(SearchDto searchDto, Pageable pageable) {
+  ResponseEntity<Page<User>> fetchPaginatedUserList(SearchDto searchDto, Pageable pageable) {
     return authenticationService.fetchPaginatedUserList(searchDto, pageable);
   }
 }

@@ -50,6 +50,9 @@ dependencies {
 	implementation ("org.apache.commons:commons-lang3:3.14.0")
 // https://mvnrepository.com/artifact/org.hibernate/hibernate-validator
 	implementation ("org.hibernate:hibernate-validator:8.0.1.Final")
+	// https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
+
 
 
 	compileOnly ("org.projectlombok:lombok")

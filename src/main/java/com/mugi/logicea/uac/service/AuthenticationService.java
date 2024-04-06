@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,6 +38,7 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final GenericSpecifications<User> userSpecification = new GenericSpecifications<>();
+    User nullableObject = null;
 
 
     @EventListener(ApplicationReadyEvent.class)
@@ -70,7 +72,7 @@ public class AuthenticationService {
     }
 
 
-    public RestResponse createUser(SignUpRequest request) {
+    public ResponseEntity<RestResponseObject> createUser(SignUpRequest request) {
         User user = UACMapper.INSTANCE.signUpToUserMapper(request);
 
         List<ErrorMessage> validateObj = validateNotNull(request);
@@ -115,7 +117,7 @@ public class AuthenticationService {
     }
 
 
-    public RestResponse updateUser(SignUpUpdateRequest request) {
+    public ResponseEntity updateUser(SignUpUpdateRequest request) {
         User user = UACMapper.INSTANCE.signUpDateToUserMapper(request);
 
         List<ErrorMessage> validateObj = validateNotNull(request);
@@ -195,10 +197,10 @@ public class AuthenticationService {
     }
 
 
-    public RestResponse fetchUser(SearchDto searchDto) {
+    public ResponseEntity<List<User>> fetchUser(SearchDto searchDto) {
         List<ErrorMessage> validateObj = validateNotNull(searchDto);
         if (ObjectUtils.isNotEmpty(validateObj)) {
-            return new RestResponse(
+            return new ResponseEntity(
                     RestResponseObject.builder().message("Invalid Fields!!").errors(validateObj).build(),
                     HttpStatus.BAD_REQUEST);
         }
@@ -206,20 +208,20 @@ public class AuthenticationService {
             Specification<User> userSpec = userSpecification.findByFieldAndValue(searchDto);
             List<User> users = userRepository.findAll(userSpec);
 
-             return new RestResponse(
+             return new ResponseEntity(
                     RestResponseObject.builder().message("Fetched Successfully")
                             .payload(users)
                             .build(),
                     HttpStatus.OK);
         } catch (Exception e) {
             log.error("fetchBusinessEntity Exception:-" + e.getMessage());
-            return new RestResponse(
+            return new ResponseEntity(
                     RestResponseObject.builder().message(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
 
 
-    public RestResponse fetchPaginatedUserList(SearchDto searchDto, Pageable pageable) {
+    public ResponseEntity<Page<User>> fetchPaginatedUserList(SearchDto searchDto, Pageable pageable) {
         try {
             Specification<User> userSpec =  Specification.where(null);
             if (ObjectUtils.isNotEmpty(searchDto.getFieldName())
@@ -228,30 +230,30 @@ public class AuthenticationService {
             }
             Page<User> page = userRepository.findAll(userSpec, pageable);
 
-            return new RestResponse(
+            return new ResponseEntity(
                     RestResponseObject.builder().message("Fetched Successfully")
                             .payload(page)
                             .build(),
                     HttpStatus.OK);
         } catch (Exception e) {
             log.error("fetchPaginatedBusinessEntityList Exception:-" + e.getMessage());
-            return new RestResponse(
+            return new ResponseEntity(
                     RestResponseObject.builder().message(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
     }
 
 
-    public RestResponse changePassowrd(ChangePasswordRequest changePasswordRequest) {
+    public ResponseEntity<RestResponseObject> changePassowrd(ChangePasswordRequest changePasswordRequest) {
         List<ErrorMessage> validateObj = validateNotNull(changePasswordRequest);
         if (ObjectUtils.isNotEmpty(validateObj)) {
 
-            return new RestResponse(
+            return new ResponseEntity(
                     RestResponseObject.builder().message("Invalid Fields!!").errors(validateObj).build(),
                     HttpStatus.BAD_REQUEST);
         }
         Optional<User> user = userRepository.findByEmail(changePasswordRequest.getLogin());
         if (user.isEmpty()) {
-            return new RestResponse(
+            return new ResponseEntity(
                     RestResponseObject.builder().message("User does not exist!!").errors(validateObj).build(),
                     HttpStatus.BAD_REQUEST);
         }
@@ -260,29 +262,29 @@ public class AuthenticationService {
                         .password(passwordEncoder.encode(changePasswordRequest.getPassword()))
                         .build();
         userRepository.save(existingUser);
-        return new RestResponse(
+        return new ResponseEntity(
                 RestResponseObject.builder().message("Updated password successfully").build(),
                 HttpStatus.OK);
     }
 
 
-    public RestResponse changeUserStatus(ChangeStatusRequest changeStatusRequest) {
+    public ResponseEntity<RestResponseObject> changeUserStatus(ChangeStatusRequest changeStatusRequest) {
         List<ErrorMessage> validateObj = validateNotNull(changeStatusRequest);
         if (ObjectUtils.isNotEmpty(validateObj)) {
 
-            return new RestResponse(
+            return new ResponseEntity(
                     RestResponseObject.builder().message("Invalid Fields!!").errors(validateObj).build(),
                     HttpStatus.BAD_REQUEST);
         }
         Optional<User> user = userRepository.findByEmail(changeStatusRequest.getLogin());
         if (user.isEmpty()) {
-            return new RestResponse(
+            return new ResponseEntity(
                     RestResponseObject.builder().message("User does not exist!!").errors(validateObj).build(),
                     HttpStatus.BAD_REQUEST);
         }
         User existingUser = user.get().toBuilder().active(changeStatusRequest.isStatus()).build();
         userRepository.save(existingUser);
-        return new RestResponse(
+        return new ResponseEntity(
                 RestResponseObject.builder().message("Changed Status Successfully").build(), HttpStatus.OK);
     }
 
