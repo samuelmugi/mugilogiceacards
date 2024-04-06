@@ -1,4 +1,4 @@
-package com.mugi.logicea.cards;
+package com.mugi.logicea;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

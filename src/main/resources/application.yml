@@ -1,0 +1,26 @@
+server:
+    port: 8080
+    servlet:
+        context-path: /logicea
+spring:
+    application:
+        name: logicea-app
+
+    datasource:
+        url: jdbc:mysql://localhost:3306/logicea_cards?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+        username: admin
+        password: admin
+        driver-class-name: com.mysql.cj.jdbc.Driver
+    jpa:
+        database-platform: org.hibernate.dialect.MySQL8Dialect
+        hibernate:
+            ddl-auto: update
+        show-sql: true
+        properties:
+            hibernate:
+                format_sql: true
+                use-new-id-generator-mappings: false
+
+token:
+    signing:
+        key: Oxiftl,=M,SFmP(}O?L@zzd3*X2jy`8y*0A{cUD>g-=x6Ja@c7O)#T;/Du0S_$n
