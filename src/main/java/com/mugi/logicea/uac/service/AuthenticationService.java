@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -205,10 +206,9 @@ public class AuthenticationService {
             Specification<User> userSpec = userSpecification.findByFieldAndValue(searchDto);
             List<User> users = userRepository.findAll(userSpec);
 
-            List<UserResponse> response = UACMapper.INSTANCE.userEntotyToUserResponseList(users);
-            return new RestResponse(
+             return new RestResponse(
                     RestResponseObject.builder().message("Fetched Successfully")
-                            .payload(response)
+                            .payload(users)
                             .build(),
                     HttpStatus.OK);
         } catch (Exception e) {
@@ -221,17 +221,16 @@ public class AuthenticationService {
 
     public RestResponse fetchPaginatedUserList(SearchDto searchDto, Pageable pageable) {
         try {
-//      Query query = new Query();
-//      if (ObjectUtils.isEmpty(searchDto.getFieldName())
-//          && ObjectUtils.isNotEmpty(searchDto.getValue()))
-//        query.addCriteria(Criteria.where(searchDto.getFieldName()).regex(searchDto.getValue()));
-//      Page<User> page =
-//              userCustomAppRepository.findByQueryWithPagination(
-//              User.class, query, PageRequest.of(pageable.getPageNumber(), pageable.getPageSize()));
+            Specification<User> userSpec =  Specification.where(null);
+            if (ObjectUtils.isNotEmpty(searchDto.getFieldName())
+                    && ObjectUtils.isNotEmpty(searchDto.getValue())) {
+                userSpec = userSpecification.findByFieldAndValue(searchDto);
+            }
+            Page<User> page = userRepository.findAll(userSpec, pageable);
 
             return new RestResponse(
                     RestResponseObject.builder().message("Fetched Successfully")
-//                  .payload(page)
+                            .payload(page)
                             .build(),
                     HttpStatus.OK);
         } catch (Exception e) {
