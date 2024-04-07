@@ -13,8 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/v1/uac")
 @RequiredArgsConstructor
@@ -50,7 +48,7 @@ public class AuthenticationController {
 
 
   @GetMapping(path = "/search", produces = "application/json")
-  ResponseEntity<List<User>> fetchUser(SearchDto searchDto) {
+  ResponseEntity<User> fetchUser(SearchDto searchDto) {
     return authenticationService.fetchUser(searchDto);
   }
 

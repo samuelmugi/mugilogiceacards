@@ -1,6 +1,7 @@
 package com.mugi.logicea.entiy;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.mugi.logicea.cards.dtos.CardStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,12 +28,15 @@ public class Card {
     private String name;
     private String color;
     private String description;
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private CardStatus status;
     private Date createDate;
-    private Long createBy;
+    @ManyToOne
+    private User createBy;
     @JsonIgnore
     private Date modifiedDate;
     @JsonIgnore
-    private Long modifiedBy;
+    @ManyToOne
+    private User modifiedBy;
 
 }

@@ -20,4 +20,5 @@ public class CardRequest {
   @Size(min = 7, max = 7, message = "Field should be 6 alphanumeric characters prefixed with a #")
   private String color;
   private String description;
+  private String status;
 }

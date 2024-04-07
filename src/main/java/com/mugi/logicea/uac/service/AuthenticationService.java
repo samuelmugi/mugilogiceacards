@@ -196,7 +196,7 @@ public class AuthenticationService {
     }
 
 
-    public ResponseEntity<List<User>> fetchUser(SearchDto searchDto) {
+    public ResponseEntity<User> fetchUser(SearchDto searchDto) {
         List<ErrorMessage> validateObj = validateNotNull(searchDto);
         if (ObjectUtils.isNotEmpty(validateObj)) {
             return new ResponseEntity(
@@ -205,15 +205,17 @@ public class AuthenticationService {
         }
         try {
             Specification<User> userSpec = userSpecification.findByFieldAndValue(searchDto);
-            List<User> users = userRepository.findAll(userSpec);
-
+            Optional<User> user = userRepository.findOne(userSpec);
+            if (user.isEmpty()) new ResponseEntity(
+                    RestResponseObject.builder().message("No User found!!").build(),
+                    HttpStatus.NOT_FOUND);
              return new ResponseEntity(
                     RestResponseObject.builder().message("Fetched Successfully")
-                            .payload(users)
+                            .payload(user)
                             .build(),
                     HttpStatus.OK);
         } catch (Exception e) {
-            log.error("fetchBusinessEntity Exception:-" + e.getMessage());
+            log.error("fetchUser Exception:-" + e.getMessage());
             return new ResponseEntity(
                     RestResponseObject.builder().message(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
@@ -235,7 +237,7 @@ public class AuthenticationService {
                             .build(),
                     HttpStatus.OK);
         } catch (Exception e) {
-            log.error("fetchPaginatedBusinessEntityList Exception:-" + e.getMessage());
+            log.error("fetchPaginatedUserList Exception:-" + e.getMessage());
             return new ResponseEntity(
                     RestResponseObject.builder().message(e.getMessage()).build(), HttpStatus.BAD_REQUEST);
         }
