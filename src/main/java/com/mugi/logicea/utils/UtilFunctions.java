@@ -6,6 +6,7 @@ import jakarta.validation.Validator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,5 +61,11 @@ public class UtilFunctions {
     }
   }
 
-
+  public static String getCurrentUserRole() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+      return ((UserDetails) authentication.getPrincipal()).getAuthorities().iterator().next().getAuthority();
+    }
+    return null; // Return null if no authenticated user or role found
+  }
 }
