@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CardRequest {
+public class UpdateCardRequest {
 
   @NotNull(message = "name cannot be null")
   private String name;

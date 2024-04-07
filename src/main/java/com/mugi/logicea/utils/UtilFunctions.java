@@ -16,7 +16,18 @@ public class UtilFunctions {
   private static final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
 
+  public static <T> ErrorMessage validateField(T object, String fieldName) {
+    Set<ConstraintViolation<T>> violations = validator.validateProperty(object, fieldName);
+    if (!violations.isEmpty()) {
+      // Get the first validation error message
 
+             return ErrorMessage.builder()
+                      .field(fieldName)
+                      .message(violations.iterator().next().getMessage())
+                      .build();
+     }
+    return null; // No validation errors
+  }
 
   public static <T> List<ErrorMessage> validateNotNull(Object obj) {
 

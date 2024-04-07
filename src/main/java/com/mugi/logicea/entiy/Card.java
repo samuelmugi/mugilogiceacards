@@ -3,6 +3,7 @@ package com.mugi.logicea.entiy;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mugi.logicea.cards.dtos.CardStatus;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,18 +26,17 @@ public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private String name;
     private String color;
     private String description;
     @Enumerated(EnumType.STRING)
     private CardStatus status;
     private Date createDate;
-    @ManyToOne
-    private User createBy;
+    private String createBy;
     @JsonIgnore
     private Date modifiedDate;
     @JsonIgnore
-    @ManyToOne
-    private User modifiedBy;
+    private String modifiedBy;
 
 }
