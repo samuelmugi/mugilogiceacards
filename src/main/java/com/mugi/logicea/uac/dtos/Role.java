@@ -1,6 +1,6 @@
 package com.mugi.logicea.uac.dtos;
 
 public enum Role {
-    USER,
+    MEMBER,
     ADMIN
 }

@@ -38,7 +38,6 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final GenericSpecifications<User> userSpecification = new GenericSpecifications<>();
-    User nullableObject = null;
 
 
     @EventListener(ApplicationReadyEvent.class)
@@ -51,7 +50,7 @@ public class AuthenticationService {
                 .lastName("user")
                 .password("user@1234")
                 .confirmPassword("user@1234")
-                .role(String.valueOf(Role.USER))
+                .role(String.valueOf(Role.MEMBER))
                 .build();
         createUser(normalUser);
         log.info("Logicea Normal user  created with email:{} and  password:{}", normalUser.getEmail(), normalUser.getPassword());
@@ -169,7 +168,7 @@ public class AuthenticationService {
         List<ErrorMessage> errorMessageList = new ArrayList<>();
 
         var reqRole = request.getRole();
-        if (!List.of(Role.ADMIN.name(), Role.USER.name()).contains(reqRole)) {
+        if (!List.of(Role.ADMIN.name(), Role.MEMBER.name()).contains(reqRole)) {
             log.error("Invalid role :{} supplied!", reqRole);
             errorMessageList.add(
                     ErrorMessage.builder().field("role").message("Invalid role :" + reqRole + " supplied!").build());

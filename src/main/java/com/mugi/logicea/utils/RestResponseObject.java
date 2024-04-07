@@ -9,9 +9,11 @@ import java.util.List;
 @Builder
 public class RestResponseObject<T> {
 
-  private String message;
-  private T payload;
-  private List<ErrorMessage> errors;
+    private String message;
+    private T payload;
+    private List<ErrorMessage> errors;
+
+
 }
 
 
