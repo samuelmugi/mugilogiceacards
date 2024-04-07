@@ -30,12 +30,12 @@ public class CardService {
     private final GenericSpecifications<Card> cardSpecification = new GenericSpecifications<>();
     private final CardRepository cardRepository;
 
-    public ResponseEntity<RestResponseObject> createCard(CreateCardRequest request) {
+    public ResponseEntity<RestResponseObject<Card>>  createCard(CreateCardRequest request) {
         Card card = CardMapper.INSTANCE.createRequestToCardEntity(request);
         List<ErrorMessage> validateObj = validateNotNull(request);
         if (ObjectUtils.isNotEmpty(validateObj)) {
 
-            return new RestResponse(
+            return new ResponseEntity(
                     RestResponseObject.builder().message("Invalid Fields!!").errors(validateObj).build(),
                     HttpStatus.BAD_REQUEST);
         }
@@ -46,18 +46,18 @@ public class CardService {
         card.setCreateBy(currentUser);
         card.setModifiedBy(currentUser);
         cardRepository.save(card);
-        return new RestResponse(
+        return new ResponseEntity(
                 RestResponseObject.builder().message("Card Created Successfully").build(),
                 HttpStatus.OK);
     }
 
 
 
-    public ResponseEntity<RestResponseObject> updateCard(Long id, UpdateCardRequest request) {
+    public ResponseEntity<RestResponseObject<Card>>  updateCard(Long id, UpdateCardRequest request) {
         List<ErrorMessage> validateObj = validateNotNull(request);
         if (ObjectUtils.isNotEmpty(validateObj)) {
 
-            return new RestResponse(
+            return new ResponseEntity(
                     RestResponseObject.builder().message("Invalid Fields!!").errors(validateObj).build(),
                     HttpStatus.BAD_REQUEST);
         }
@@ -71,18 +71,18 @@ public class CardService {
             card.setModifiedDate(Date.from(Instant.now()));
             card.setModifiedBy(currentUser);
             cardRepository.save(card);
-            return new RestResponse(
+            return new ResponseEntity(
                     RestResponseObject.builder().message("Card Updated Successfully").build(),
                     HttpStatus.OK);
         } else {
-            return new RestResponse(
+            return new ResponseEntity(
                     RestResponseObject.builder().message("Card not found!").build(),
                     HttpStatus.NOT_FOUND);
 
         }
     }
 
-    public ResponseEntity<Card> fetchCard(SearchDto searchDto) {
+    public ResponseEntity<RestResponseObject<Card>>  fetchCard(SearchDto searchDto) {
         List<ErrorMessage> validateObj = validateNotNull(searchDto);
         if (ObjectUtils.isNotEmpty(validateObj)) {
             return new ResponseEntity(
@@ -133,11 +133,11 @@ public class CardService {
         if (existingCard.isPresent()) {
 
             cardRepository.delete(existingCard.get());
-            return new RestResponse(
+            return new ResponseEntity(
                     RestResponseObject.builder().message("Card Deleted Successfully").build(),
                     HttpStatus.OK);
         } else {
-            return new RestResponse(
+            return new ResponseEntity(
                     RestResponseObject.builder().message("Card not found!").build(),
                     HttpStatus.NOT_FOUND);
 

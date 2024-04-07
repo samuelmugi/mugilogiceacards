@@ -21,10 +21,10 @@ public class AuthenticationController {
   private final AuthenticationService authenticationService;
 
   @PostMapping("/createUser")
-  public ResponseEntity<RestResponseObject> createUser(@RequestBody SignUpRequest request) {
+  public ResponseEntity<RestResponseObject<User>> createUser(@RequestBody SignUpRequest request) {
     return authenticationService.createUser(request);
   }  @PostMapping("/updateUser")
-  public ResponseEntity<RestResponseObject> updateUser(@RequestBody SignUpUpdateRequest request) {
+  public ResponseEntity<RestResponseObject<User>> updateUser(@RequestBody SignUpUpdateRequest request) {
     return authenticationService.updateUser(request);
   }
 
@@ -40,7 +40,7 @@ public class AuthenticationController {
   }
 
   @PostMapping("/changeStatus")
-  public ResponseEntity<RestResponseObject> changeUserStatus(
+  public ResponseEntity<RestResponseObject<User>> changeUserStatus(
       @Valid @RequestBody ChangeStatusRequest changeStatusRequest) {
     return authenticationService.changeUserStatus(changeStatusRequest);
   }
@@ -48,7 +48,7 @@ public class AuthenticationController {
 
 
   @GetMapping(path = "/search", produces = "application/json")
-  ResponseEntity<User> fetchUser(SearchDto searchDto) {
+  ResponseEntity<RestResponseObject<User>> fetchUser(SearchDto searchDto) {
     return authenticationService.fetchUser(searchDto);
   }
 

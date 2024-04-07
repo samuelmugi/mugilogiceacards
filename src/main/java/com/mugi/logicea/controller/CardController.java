@@ -21,12 +21,12 @@ public class CardController {
     private final CardService cardService;
 
     @PostMapping("/createCard")
-    public ResponseEntity<RestResponseObject> createCard(@RequestBody CreateCardRequest request) {
+    public ResponseEntity<RestResponseObject<Card>> createCard(@RequestBody CreateCardRequest request) {
         return cardService.createCard(request);
     }
 
     @PostMapping("/updateCard/{id}")
-    public ResponseEntity<RestResponseObject> updateCard(@PathVariable Long id, @RequestBody UpdateCardRequest request) {
+    public ResponseEntity<RestResponseObject<Card>>  updateCard(@PathVariable Long id, @RequestBody UpdateCardRequest request) {
         return cardService.updateCard(id,request);
     }
 
@@ -36,7 +36,7 @@ public class CardController {
     }
 
     @GetMapping(path = "/search", produces = "application/json")
-    ResponseEntity<Card> fetchCard(SearchDto searchDto) {
+    ResponseEntity<RestResponseObject<Card>>  fetchCard(SearchDto searchDto) {
         return cardService.fetchCard(searchDto);
     }
 
