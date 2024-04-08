@@ -24,4 +24,4 @@ Signing users up is out of scope for this assignment, feel free to populate your
 Regarding authentication, you are encouraged to generate a JSON Web Token to store user info - said token can be included in the
 “Authorization“ header (as an OAuth 2.0 Bearer Token) in subsequent API calls
 
-http://localhost:8080/logicea/swagger-ui/index.html
+* [Swagger UI Link](http://localhost:8080/logicea/swagger-ui/index.html)
