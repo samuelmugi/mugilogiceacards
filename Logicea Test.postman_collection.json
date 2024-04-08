@@ -1,0 +1,384 @@
+{
+	"info": {
+		"_postman_id": "b42bcfb3-0c06-4c22-8607-c352096c5d38",
+		"name": "Logicea Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14386008"
+	},
+	"item": [
+		{
+			"name": "UAC",
+			"item": [
+				{
+					"name": "Sign In",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"console.log(jsonData.token)",
+									"// pm.globals.set(\"saf-token\", jsonData.access_token);",
+									"pm.collectionVariables.set(\"logiceatoken\", jsonData.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"login\": \"user@logicea.mugi\",\n  \"password\": \"user@1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{logiceaurl}}/v1/uac/signin",
+							"host": [
+								"{{logiceaurl}}"
+							],
+							"path": [
+								"v1",
+								"uac",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{logiceatoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"mugi\",\n  \"lastName\": \"mugi\",\n  \"email\": \"mugi12@logicea.mugi\",\n  \"password\": \"mugi@1234\",\n  \"confirmPassword\": \"mugi@1234\",\n  \"role\": \"USER\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{logiceaurl}}/v1/uac/createUser",
+							"host": [
+								"{{logiceaurl}}"
+							],
+							"path": [
+								"v1",
+								"uac",
+								"createUser"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{logiceatoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{logiceaurl}}/v1/uac/search?fieldName=email&value=mugi12@logicea.mugi",
+							"host": [
+								"{{logiceaurl}}"
+							],
+							"path": [
+								"v1",
+								"uac",
+								"search"
+							],
+							"query": [
+								{
+									"key": "fieldName",
+									"value": "email"
+								},
+								{
+									"key": "value",
+									"value": "mugi12@logicea.mugi"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch User Pagination",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{logiceatoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{logiceaurl}}/v1/uac/list?fieldName=email&value=mugi12@logicea.mugi&page=0&size=10",
+							"host": [
+								"{{logiceaurl}}"
+							],
+							"path": [
+								"v1",
+								"uac",
+								"list"
+							],
+							"query": [
+								{
+									"key": "fieldName",
+									"value": "email"
+								},
+								{
+									"key": "value",
+									"value": "mugi12@logicea.mugi"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "CARD",
+			"item": [
+				{
+					"name": "Create Card",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{logiceatoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"work\",\n  \"color\": \"#094676\"\n//   \"description\": \"description_e1aa94fd71c4\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{logiceaurl}}/v1/card/createCard",
+							"host": [
+								"{{logiceaurl}}"
+							],
+							"path": [
+								"v1",
+								"card",
+								"createCard"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Card",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{logiceatoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"work2\",\n  \"color\": \"#099788\",\n  \"description\": \"description_e1aa94fd71c4\",\n   \"status\": \"IN_PROGRESS\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{logiceaurl}}/v1/card/updateCard/5",
+							"host": [
+								"{{logiceaurl}}"
+							],
+							"path": [
+								"v1",
+								"card",
+								"updateCard",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch Card",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{logiceatoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{logiceaurl}}/v1/card/search?fieldName=name&value=work2",
+							"host": [
+								"{{logiceaurl}}"
+							],
+							"path": [
+								"v1",
+								"card",
+								"search"
+							],
+							"query": [
+								{
+									"key": "fieldName",
+									"value": "name"
+								},
+								{
+									"key": "value",
+									"value": "work2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Fetch Card Pagination Copy",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{logiceatoken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{logiceaurl}}/v1/card/list?fieldName=status&value=IN_PROGRESS&page=0&size=10",
+							"host": [
+								"{{logiceaurl}}"
+							],
+							"path": [
+								"v1",
+								"card",
+								"list"
+							],
+							"query": [
+								{
+									"key": "fieldName",
+									"value": "status"
+								},
+								{
+									"key": "value",
+									"value": "IN_PROGRESS"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "logiceaurl",
+			"value": "http://localhost:8080/logicea",
+			"type": "string"
+		},
+		{
+			"key": "logiceatoken",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
