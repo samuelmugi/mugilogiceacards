@@ -1,1 +1,1 @@
-rootProject.name = "cards"
+rootProject.name = "mugi-logicea-cards"

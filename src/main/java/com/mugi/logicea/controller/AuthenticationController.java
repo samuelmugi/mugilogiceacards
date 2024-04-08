@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,6 +22,7 @@ public class AuthenticationController {
   private final AuthenticationService authenticationService;
 
   @PostMapping("/createUser")
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
   public ResponseEntity<RestResponseObject<User>> createUser(@RequestBody SignUpRequest request) {
     return authenticationService.createUser(request);
   }  @PostMapping("/updateUser")
@@ -35,11 +37,13 @@ public class AuthenticationController {
   }
 
   @PostMapping("/changePassword")
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
   public ResponseEntity<RestResponseObject> changePassowrd(@Valid @RequestBody ChangePasswordRequest request) {
     return authenticationService.changePassowrd(request);
   }
 
   @PostMapping("/changeStatus")
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
   public ResponseEntity<RestResponseObject<User>> changeUserStatus(
       @Valid @RequestBody ChangeStatusRequest changeStatusRequest) {
     return authenticationService.changeUserStatus(changeStatusRequest);
@@ -48,11 +52,13 @@ public class AuthenticationController {
 
 
   @GetMapping(path = "/search", produces = "application/json")
+  @PreAuthorize("hasAnyRole('ROLE_MEMBER', 'ROLE_ADMIN')")
   ResponseEntity<RestResponseObject<User>> fetchUser(SearchDto searchDto) {
     return authenticationService.fetchUser(searchDto);
   }
 
   @GetMapping(path = "/list", produces = "application/json")
+  @PreAuthorize("hasRole('ROLE_ADMIN')")
   ResponseEntity<Page<User>> fetchPaginatedUserList(SearchDto searchDto, Pageable pageable) {
     return authenticationService.fetchPaginatedUserList(searchDto, pageable);
   }

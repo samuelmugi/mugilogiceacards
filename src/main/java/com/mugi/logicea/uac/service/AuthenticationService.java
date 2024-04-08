@@ -50,7 +50,7 @@ public class AuthenticationService {
                 .lastName("user")
                 .password("user@1234")
                 .confirmPassword("user@1234")
-                .role(String.valueOf(Role.MEMBER))
+                .role(String.valueOf(Role.ROLE_MEMBER))
                 .build();
         createUser(normalUser);
         log.info("Logicea Normal user  created with email:{} and  password:{}", normalUser.getEmail(), normalUser.getPassword());
@@ -60,7 +60,7 @@ public class AuthenticationService {
                 .lastName("admin")
                 .password("admin@1234")
                 .confirmPassword("admin@1234")
-                .role(String.valueOf(Role.ADMIN))
+                .role(String.valueOf(Role.ROLE_ADMIN))
                 .build();
         createUser(adminUser);
         log.info("Logicea Admin user created with email:{} and password:{}", adminUser.getEmail(), adminUser.getPassword());
@@ -168,7 +168,7 @@ public class AuthenticationService {
         List<ErrorMessage> errorMessageList = new ArrayList<>();
 
         var reqRole = request.getRole();
-        if (!List.of(Role.ADMIN.name(), Role.MEMBER.name()).contains(reqRole)) {
+        if (!List.of(Role.ROLE_ADMIN.name(), Role.ROLE_MEMBER.name()).contains(reqRole)) {
             log.error("Invalid role :{} supplied!", reqRole);
             errorMessageList.add(
                     ErrorMessage.builder().field("role").message("Invalid role :" + reqRole + " supplied!").build());

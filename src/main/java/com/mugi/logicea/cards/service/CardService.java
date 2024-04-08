@@ -130,7 +130,7 @@ public class CardService {
                 cardSpec = cardSpecification.findByFieldAndValue(searchDto);
             }
             String userRole = getCurrentUserRole();
-            if (userRole.equals(Role.MEMBER.toString())) {
+            if (userRole.equals(Role.ROLE_MEMBER.toString())) {
                 cardSpec = cardSpec.and(cardSpecification.findByFieldAndValue(SearchDto.builder()
                         .fieldName("createBy")
                         .value(getCurrentUser())
@@ -174,7 +174,7 @@ public class CardService {
 
     boolean validateUserHasNoAccess(String createdBy) {
         String userRole = getCurrentUserRole();
-        if (ObjectUtils.equals(userRole, Role.ADMIN.toString())) return false;
+        if (ObjectUtils.equals(userRole, Role.ROLE_ADMIN.toString())) return false;
         var currentUser = getCurrentUser();
         return ObjectUtils.notEqual(currentUser, createdBy);
 
