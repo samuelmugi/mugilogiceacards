@@ -47,7 +47,7 @@ public class CardController {
 
     @GetMapping(path = "/list", produces = "application/json")
     @PreAuthorize("hasAnyRole('ROLE_MEMBER', 'ROLE_ADMIN')")
-    ResponseEntity<Page<Card>> fetchPaginatedCardList(SearchDto searchDto, Pageable pageable) {
+    ResponseEntity<RestResponseObject<Page<Card>>> fetchPaginatedCardList(SearchDto searchDto, Pageable pageable) {
         return cardService.fetchPaginatedCardList(searchDto, pageable);
     }
 }

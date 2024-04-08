@@ -4,7 +4,6 @@ import com.mugi.logicea.entiy.User;
 import com.mugi.logicea.repository.UserRepository;
 import com.mugi.logicea.security.JwtService;
 import com.mugi.logicea.uac.dtos.*;
-import com.mugi.logicea.utils.GenericSpecifications;
 import com.mugi.logicea.utils.RestResponseObject;
 import com.mugi.logicea.utils.SearchDto;
 import org.junit.jupiter.api.BeforeEach;
@@ -60,8 +59,7 @@ class AuthenticationServiceTest {
     @Mock
     private AuthenticationManager authenticationManager;
 
-    @Mock
-    private GenericSpecifications<User> userSpecification;
+
     @InjectMocks
     AuthenticationService authenticationService;
 

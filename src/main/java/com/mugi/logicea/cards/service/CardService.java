@@ -121,7 +121,7 @@ public class CardService {
         }
     }
 
-    public ResponseEntity<Page<Card>> fetchPaginatedCardList(SearchDto searchDto, Pageable pageable) {
+    public ResponseEntity<RestResponseObject<Page<Card>>> fetchPaginatedCardList(SearchDto searchDto, Pageable pageable) {
         try {
             Specification<Card> cardSpec = Specification.where(null);
 
