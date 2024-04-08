@@ -145,6 +145,7 @@ public class AuthenticationService {
 
             User toSave =
                     user.toBuilder()
+                            .id(existingUser.get().getId())
                             .createDate(existingUser.get().getCreateDate())
                             .createBy(existingUser.get().getCreateBy())
                             .modifiedDate(Date.from(Instant.now()))
@@ -156,7 +157,7 @@ public class AuthenticationService {
 
             User updatedUser = userRepository.save(toSave);
             return new ResponseEntity(
-                    RestResponseObject.builder().message("User Created Successfully").payload(updatedUser).build(), HttpStatus.OK);
+                    RestResponseObject.builder().message("User Updated Successfully").payload(updatedUser).build(), HttpStatus.OK);
         } catch (Exception ex) {
             log.error("signup:- " + ex.getMessage());
             return new ResponseEntity(
@@ -211,7 +212,7 @@ public class AuthenticationService {
                     HttpStatus.NOT_FOUND);
              return new ResponseEntity(
                     RestResponseObject.builder().message("Fetched Successfully")
-                            .payload(user)
+                            .payload(user.get())
                             .build(),
                     HttpStatus.OK);
         } catch (Exception e) {
@@ -222,7 +223,7 @@ public class AuthenticationService {
     }
 
 
-    public ResponseEntity<Page<User>> fetchPaginatedUserList(SearchDto searchDto, Pageable pageable) {
+    public ResponseEntity<RestResponseObject<Page<User>>> fetchPaginatedUserList(SearchDto searchDto, Pageable pageable) {
         try {
             Specification<User> userSpec =  Specification.where(null);
             if (ObjectUtils.isNotEmpty(searchDto.getFieldName())

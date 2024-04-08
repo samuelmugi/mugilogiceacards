@@ -59,7 +59,7 @@ public class AuthenticationController {
 
   @GetMapping(path = "/list", produces = "application/json")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
-  ResponseEntity<Page<User>> fetchPaginatedUserList(SearchDto searchDto, Pageable pageable) {
+  ResponseEntity<RestResponseObject<Page<User>>> fetchPaginatedUserList(SearchDto searchDto, Pageable pageable) {
     return authenticationService.fetchPaginatedUserList(searchDto, pageable);
   }
 }
